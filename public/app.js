@@ -139,7 +139,7 @@ function landing() {
       <button class="card lobby" data-act="rejoin" data-code="${c}" data-k="lb-${c}"><span class="lc">${c}<em>我的</em></span><span class="lp"></span><span class="ls">点击进入</span></button>`).join('')
     : '<div class="empty">暂无进行中的房间</div>';
   const back = encodeURIComponent(location.href);
-  return `<div class="hero" data-k="hero"><a class="nav l" href="https://boardgame.leisurecat.cloud">‹ 全部游戏</a><a class="nav r" href="https://boardgame.leisurecat.cloud/?rate=${VERSIONS[ui.ver].game}&back=${back}">★ 写评价</a>
+  return `<div class="hero" data-k="hero"><a class="nav l" href="https://boardgame.leisurecat.cloud">‹ 全部游戏</a><a class="nav r" href="https://boardgame.leisurecat.cloud/?rate=${REVIEW_GAME}&back=${back}">★ 写评价</a>
       <div class="fan">${img('b0')}${img('b7')}${img('b12')}</div>
       <h1><b>7</b>连翻助手</h1><div class="sub">点牌算分 · 累计到 200 不烧心</div></div><div class="rainbow"></div>
     <div class="wrap" data-k="landing">
@@ -271,6 +271,9 @@ function overView() {
 
 /* ---------- rating this game (stars + comment), shown on the hub boardgame.leisurecat.cloud ---------- */
 const REVIEW_API = 'https://boardgame.leisurecat.cloud/api/reviews';
+// The hub keeps one entry for both versions (one box on its turntable): a 冤家路窄 review says so in its text.
+const REVIEW_GAME = 'flip7';
+const reviewText = t => ((S.ver === 'veng' ? '（冤家路窄）' : '') + t.trim()).slice(0, 300);
 const STAR_TXT = ['点星星打分', '不推荐', '一般', '还行', '好玩', '超好玩'];
 const rvKey = () => `f7-rv-${code}-${S.gid}`;
 const savedReview = () => { try { return JSON.parse(store.get(rvKey())) || {}; } catch { return {}; } };
@@ -292,7 +295,7 @@ async function sendReview() {
   rv.state = 'sending'; rv.err = ''; render();
   try {
     const r = await fetch(REVIEW_API, { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ game: VERSIONS[S.ver].game, stars: rv.stars, name: pname(rv.who), text: rv.text, room: code }) });
+      body: JSON.stringify({ game: REVIEW_GAME, stars: rv.stars, name: pname(rv.who), text: reviewText(rv.text), room: code }) });
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || `提交失败（${r.status}）`);
     rv.state = 'sent';
     store.set(rvKey(), JSON.stringify({ who: rv.who, stars: rv.stars, text: rv.text, state: 'sent' }));

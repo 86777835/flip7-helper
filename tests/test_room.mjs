@@ -165,6 +165,13 @@ await C.click('.sheet [data-act=save]'); await C.waitForSelector('.sheet', { sta
 await bust(C, '乙');
 await endRound(C);
 eq('残酷模式 totals', Object.fromEntries(await C.$$eval('.pl', l => l.map(x => [x.querySelector('.nm').firstChild.textContent, +x.querySelector('.tt').firstChild.textContent]))), { 甲: 20, 丙: -3, 乙: -15 });
+await total(C, '甲', 190); await bust(C, '乙'); await total(C, '丙', 5);
+await endRound(C); await C.waitForSelector('.champ');
+await C.click('.rv-who button:has-text("乙")'); await C.click('[data-act=rv-star][data-n="4"]'); await C.fill('[data-rv]', '换爆两个人太爽'); await C.click('[data-act=rv-send]');
+await C.waitForSelector('.rv-done');
+eq('冤家路窄 review: the one game key, the version in the text', reviews.at(-1), { game: 'flip7', stars: 4, name: '乙', text: '（冤家路窄）换爆两个人太爽', room: new URL(C.url()).searchParams.get('r') });
+await C.click('[data-act=leave]'); await C.waitForSelector('.hero');
+eq('写评价 on the landing page uses the one key', new URL(await C.getAttribute('.nav.r', 'href')).searchParams.get('rate'), 'flip7');
 
 for (const p of [A, B, C]) eq('no page errors', p.errs, []);
 await b.close();

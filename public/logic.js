@@ -10,14 +10,14 @@ export const BRUTAL_HIT = 15;              // 残酷模式: a Flip 7 may take 15
 // Copies of each card in one deck (rulebook card lists). Number keys are the card's value.
 export const VERSIONS = {
   base: {
-    name: '7连翻', full: '《7连翻》', game: 'flip7',
+    name: '7连翻', full: '《7连翻》',
     nums: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     count: n => n === 0 ? 1 : n,           // twelve 12s … one 1, and one 0
     mods: ['+2', '+4', '+6', '+8', '+10', 'x2'],
     specials: []
   },
   veng: {
-    name: '冤家路窄', full: '《7连翻：冤家路窄》', game: 'flip7-vengeance',
+    name: '冤家路窄', full: '《7连翻：冤家路窄》',
     nums: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     count: n => ({ 13: 12, 7: 6 })[n] ?? n, // plus the Lucky 13 and the Unlucky 7 make thirteen 13s and seven 7s
     mods: ['-2', '-4', '-6', '-8', '-10', '/2'],
